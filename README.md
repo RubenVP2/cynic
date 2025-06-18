@@ -46,6 +46,7 @@ Pour installer le Détecteur, suivez ces quelques étapes. Un peu de courage, la
 
 3.  **Configurez votre clé secrète :**
     -   Copiez le fichier d'exemple `.env.example` en un fichier `.env`.
+    
         ```bash
         cp .env.example .env
         ```
