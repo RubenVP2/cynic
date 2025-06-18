@@ -1,7 +1,7 @@
 # cynic/analyzer.py
 
 import json
-from mistralai.client import Mistral
+from mistralai import Mistral
 from .prompts import PROMPT_SYSTEME
 
 
