@@ -1,0 +1,24 @@
+[project]
+name = "cynic-analyzer"
+version = "0.1.0"
+description = "L'IA qui vous dit la vérité, même quand ça fait mal."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "Ezoniks" }
+]
+keywords = ["mistral", "ai", "nlp", "cli", "cynicism"]
+
+dependencies = [
+    "rich",
+    "mistralai"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+[project.scripts]
+cynic = "cynic.cli:main"

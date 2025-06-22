@@ -41,7 +41,7 @@ Pour installer le Détecteur, suivez ces quelques étapes. Un peu de courage, la
 
 2.  **Installez les dépendances nécessaires :** (Assurez-vous d'avoir Python 3.9+ installé)
     ```bash
-    pip install -r requirements.txt
+    pip install -e .[dev]
     ```
 
 3.  **Configurez votre clé secrète :**

@@ -59,6 +59,13 @@ class CynicAnalyzer:
             resultat = json.loads(reponse_json)
             return resultat
 
+        except json.JSONDecodeError:
+            # Si l'API retourne un JSON mal formé
+            print("Erreur : La réponse de l'API n'était pas un JSON valide.")
+            return {
+                "score": -1,
+                "verdict": "Le Détecteur a reçu une réponse incompréhensible. Peut-être que l'IA elle-même est devenue trop cynique pour répondre.",
+            }
         except Exception as e:
             # TODO : Affiner la gestion d'erreur ici plus tard
             print(f"Une erreur est survenue lors de l'appel à l'API Mistral : {e}")

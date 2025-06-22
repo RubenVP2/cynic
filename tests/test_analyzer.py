@@ -1,41 +1,43 @@
 # tests/test_analyzer.py
+import json
 
-import pytest
 from unittest.mock import patch, Mock
 from cynic.analyzer import CynicAnalyzer
 
 
-def test_analyze_successful_response():
+@patch("cynic.analyzer.Mistral")
+def test_analyze_successful_response(mock_mistral_class):
     """
-    Teste le cas où l'API Mistral retourne une réponse JSON valide.
+    Teste le cas d'une réponse réussie de l'API en construisant
+    un mock qui respecte la structure de l'objet de réponse réel.
     """
-    # Mock : Simuler la réponse de l'API Mistral
-    mock_choice = Mock()
-    mock_choice.message.content = (
-        '{"score": 8, "verdict": "Verdict de test, parfaitement cynique."}'
+    # 1. Préparation du Mock
+    mock_api_response_content = json.dumps(
+        {"score": 8, "verdict": "Le cynisme est palpable."}
     )
 
-    # On crée le mock pour l'objet de réponse global
-    mock_api_response = Mock()
-    mock_api_response.choices = [mock_choice]
+    # On crée un mock pour l'objet "message" le plus imbriqué
+    mock_message = Mock()
+    mock_message.content = mock_api_response_content
 
-    # Patch : Remplacer l'appel à l'API Mistral par notre réponse simulée
-    with patch(
-        "cynic.analyzer.Mistral.chat.complete", return_value=mock_api_response
-    ) as mock_api_call:
+    # On crée un mock pour l'objet "choice" qui contient le message
+    mock_choice = Mock()
+    mock_choice.message = mock_message
 
-        analyzer = CynicAnalyzer(api_key="fake_key_for_testing")
-        resultat = analyzer.analyze(
-            contexte="Un contexte sans importance",
-            reponse="Une réponse sans importance",
-        )
+    # On crée le mock de réponse final.
+    # Son attribut "choices" est une VRAIE LISTE Python contenant notre mock_choice.
+    mock_response = Mock()
+    mock_response.choices = [mock_choice]
 
-        # Assertions : Vérifier que le résultat est conforme aux attentes
-        assert isinstance(resultat, dict)
-        assert "score" in resultat
-        assert "verdict" in resultat
-        assert resultat["score"] == 8
-        assert resultat["verdict"] == "Verdict de test, parfaitement cynique."
+    # On configure le mock de la classe Mistral pour retourner notre mock_response
+    mock_instance = mock_mistral_class.return_value
+    mock_instance.chat.complete.return_value = mock_response
 
-        # Bonus : Mais si tu as lu jusqu'ici, tu es un vrai fan !
-        mock_api_call.assert_called_once()
+    # 2. Exécution du code à tester
+    analyzer = CynicAnalyzer(api_key="fake_key_for_testing")
+    resultat = analyzer.analyze(contexte="Un contexte", reponse="Une réponse")
+
+    # 3. Assertions
+    assert resultat["score"] == 8
+    assert "palpable" in resultat["verdict"]
+    mock_instance.chat.complete.assert_called_once()
