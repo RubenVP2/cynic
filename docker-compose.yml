@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  cynic-web:
+    build: .
+    image: cynic-analyzer
+    container_name: cynic-app
+    ports:
+      - "8000:8000"
+    environment:
+      # La meilleure pratique est de ne pas mettre la clé ici,
+      # mais de la lire depuis un fichier .env qui est dans le .gitignore
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}

@@ -1,0 +1,31 @@
+# Fichier .dockerignore
+
+# Git
+.git
+.gitignore
+.github
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+
+# IDE / Editeur
+.vscode/
+.idea/
+
+# Fichiers de configuration locale
+.env
+
+# Docker
+Dockerfile
+docker-compose.yml
