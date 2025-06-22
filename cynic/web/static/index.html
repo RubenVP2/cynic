@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cynic - Le Détecteur de Moquerie</title>
+    <style>
+        /* --- CSS Variables for Theming (Dark/Light Mode) --- */
+        :root {
+            --bg-color: #f0f2f5;
+            --text-color: #1c1e21;
+            --card-bg-color: #ffffff;
+            --border-color: #dcdfe6;
+            --primary-color: #457b9d;
+            --primary-hover: #1d3557;
+            --title-color: #e63946;
+            --bg-gradient-start: #a8dadc;
+            --bg-gradient-end: #457b9d;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #e4e6eb;
+            --card-bg-color: #1e1e1e;
+            --border-color: #3e4042;
+            --primary-color: #457b9d;
+            --primary-hover: #a8dadc;
+            --title-color: #e63946;
+            --bg-gradient-start: #1d3557;
+            --bg-gradient-end: #121212;
+        }
+
+        /* --- Background Animation --- */
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-color);
+            background: linear-gradient(-45deg, var(--bg-gradient-start), var(--bg-gradient-end), var(--bg-color));
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* --- Main Layout --- */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: 16px;
+            padding: 2rem 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            color: var(--title-color);
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        header p {
+            opacity: 0.8;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        textarea {
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: 2px solid var(--primary-color);
+        }
+
+        button {
+            padding: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        #result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s ease infinite;
+            margin: 2rem auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- Dark Mode Toggle --- */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 48px;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            background-color: #fff;
+            bottom: 4px;
+            content: "";
+            height: 16px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 16px;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+            </div>
+            <header>
+                <h1>🤖 Cynic</h1>
+                <p>L'IA qui vous dit la vérité, même quand ça fait mal.</p>
+            </header>
+
+            <main>
+                <form id="cynic-form">
+                    <textarea id="contexte" name="contexte" rows="4" placeholder="Contexte (optionnel)"></textarea>
+                    <textarea id="reponse" name="reponse" rows="4" placeholder="Texte à analyser..."
+                        required></textarea>
+                    <button type="submit">Analyser</button>
+                </form>
+
+                <div id="spinner" class="spinner"></div>
+                <div id="result"></div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Dark Mode Logic ---
+            const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+            const currentTheme = localStorage.getItem('theme');
+
+            if (currentTheme) {
+                document.body.classList.add(currentTheme);
+                if (currentTheme === 'dark-mode') {
+                    toggleSwitch.checked = true;
+                }
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.add('dark-mode');
+                toggleSwitch.checked = true;
+            }
+
+            toggleSwitch.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('theme', 'dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('theme', 'light-mode');
+                }
+            });
+
+            // --- API Call Logic ---
+            const form = document.getElementById('cynic-form');
+            const resultDiv = document.getElementById('result');
+            const spinner = document.getElementById('spinner');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const contexte = document.getElementById('contexte').value;
+                const reponse = document.getElementById('reponse').value;
+
+                spinner.style.display = 'block';
+                resultDiv.style.display = 'none';
+                resultDiv.innerHTML = '';
+
+                try {
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contexte, reponse }),
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.detail || 'Erreur inconnue.');
+                    }
+
+                    resultDiv.innerHTML = `
+                        <h3>Résultat de l'analyse</h3>
+                        <p><strong>Score de Moquerie :</strong> ${data.score} / 10</p>
+                        <p><strong>Verdict du Détecteur :</strong> ${data.verdict}</p>
+                    `;
+                } catch (error) {
+                    resultDiv.innerHTML = `<p style="color: var(--title-color);"><strong>Erreur :</strong> ${error.message}</p>`;
+                } finally {
+                    spinner.style.display = 'none';
+                    resultDiv.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,24 +1,31 @@
 [project]
 name = "cynic-analyzer"
-version = "0.1.0"
+version = "0.2.0"
 description = "L'IA qui vous dit la vérité, même quand ça fait mal."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [
-    { name = "Ezoniks" }
+    { name = "VOTRE_NOM", email = "VOTRE_EMAIL" }
 ]
-keywords = ["mistral", "ai", "nlp", "cli", "cynicism"]
+keywords = ["mistral", "ai", "nlp", "cli", "cynicism", "fastapi"]
 
 dependencies = [
     "rich",
     "mistralai"
 ]
 
+[project.scripts]
+cynic = "cynic.cli:main"
+
 [project.optional-dependencies]
+# Dépendances pour le développement (tests)
 dev = [
     "pytest",
 ]
-
-[project.scripts]
-cynic = "cynic.cli:main"
+# Dépendances pour l'application web
+web = [
+    "fastapi",
+    "uvicorn[standard]",
+    "python-multipart"
+]

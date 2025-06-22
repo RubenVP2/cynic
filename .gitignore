@@ -9,3 +9,6 @@ env/
 
 # Fichier de configuration de l'environnement
 .env
+
+# Build artifacts
+*.egg-info
