@@ -11,8 +11,8 @@ RUN pip install pip-tools
 COPY pyproject.toml .
 
 # On compile les dépendances (coeur + web) dans un fichier requirements.txt optimisé.
-# C'est plus robuste que 'pip install' directement.
-RUN piptools compile --extra web -o requirements.txt pyproject.toml
+# C'est plus robuste que 'pip install' directement
+RUN pip-compile --extra web -o requirements.txt pyproject.toml
 
 # On crée un environnement virtuel et on y installe les dépendances.
 # Cela nous permettra de copier uniquement cet environnement dans l'image finale.
