@@ -29,3 +29,6 @@ web = [
     "uvicorn[standard]",
     "python-multipart"
 ]
+
+[tool.setuptools]
+py-modules = []
