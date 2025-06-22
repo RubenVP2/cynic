@@ -4,7 +4,7 @@ version = "0.2.0"
 description = "L'IA qui vous dit la vérité, même quand ça fait mal."
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "MIT" }
+license = "MIT"
 authors = [
     { name = "RubenVP2"}
 ]
