@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [
-    { name = "VOTRE_NOM", email = "VOTRE_EMAIL" }
+    { name = "RubenVP2"}
 ]
 keywords = ["mistral", "ai", "nlp", "cli", "cynicism", "fastapi"]
 
