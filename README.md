@@ -2,6 +2,7 @@
 
 **L'IA qui traduit enfin le *bullshit* corporate pour vous.**
 
+[![Test du Code de Cynic](https://github.com/RubenVP2/cynic/actions/workflows/ci.yml/badge.svg)](https://github.com/RubenVP2/cynic/actions/workflows/ci.yml)
 ![Licence MIT](https://img.shields.io/badge/Licence-MIT-blue.svg)
 ![Python Version](https://img.shields.io/badge/python-3.9+-yellow.svg)
 ![Maintained](https://img.shields.io/badge/Maintenu%3F-Oui%2C%20avec%20sarcasme-red.svg)
