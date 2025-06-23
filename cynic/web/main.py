@@ -20,6 +20,7 @@ class AnalyseResponse(BaseModel):
 
     score: int
     verdict: str
+    expressions_cyniques: list[str]
 
 
 # --- Initialisation de l'application FastAPI ---

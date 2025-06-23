@@ -204,6 +204,27 @@
         input:checked+.slider:before {
             transform: translateX(24px);
         }
+
+        mark {
+            background-color: rgba(230, 57, 70, 0.4);
+            /* Rouge Cynic, semi-transparent */
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        body.dark-mode mark {
+            background-color: rgba(230, 57, 70, 0.6);
+        }
+
+        #highlighted-text {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            white-space: pre-wrap;
+            /* Conserve les sauts de ligne */
+        }
     </style>
 </head>
 
@@ -289,10 +310,27 @@
                         throw new Error(data.detail || 'Erreur inconnue.');
                     }
 
+                    function escapeRegExp(string) {
+                        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    }
+
+                    let texteSurligne = reponse;
+
+                    if (data.expressions_cyniques && data.expressions_cyniques.length > 0) {
+                        data.expressions_cyniques.forEach(phrase => {
+                            const escapedPhrase = escapeRegExp(phrase);
+                            const regex = new RegExp(escapedPhrase, 'gi');
+                            texteSurligne = texteSurligne.replace(regex, `<mark>$&</mark>`);
+                        });
+                    }
+
+
                     resultDiv.innerHTML = `
                         <h3>Résultat de l'analyse</h3>
                         <p><strong>Score de Moquerie :</strong> ${data.score} / 10</p>
                         <p><strong>Verdict du Détecteur :</strong> ${data.verdict}</p>
+                        <h4>Texte analysé :</h4>
+                        <div id="highlighted-text">${texteSurligne}</div>
                     `;
                 } catch (error) {
                     resultDiv.innerHTML = `<p style="color: var(--title-color);"><strong>Erreur :</strong> ${error.message}</p>`;
