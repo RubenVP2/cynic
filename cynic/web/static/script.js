@@ -1,89 +1,94 @@
-// cynic/web/static/script.js
+document.addEventListener('alpine:init', () => {
+    Alpine.data('cynicApp', () => ({
+        // --- État de l'application (les variables) ---
+        contexte: '',
+        reponse: '',
+        proposerAuPalmares: false,
+        isLoading: false,
+        result: null,
+        error: null,
 
-document.addEventListener('DOMContentLoaded', () => {
-    // --- Logique du Dark Mode ---
-    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-    const currentTheme = localStorage.getItem('theme');
+        // --- Logique dérivée (computed properties) ---
 
-    if (currentTheme) {
-        document.body.classList.add(currentTheme);
-        if (currentTheme === 'dark-mode') {
-            toggleSwitch.checked = true;
-        }
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark-mode');
-        toggleSwitch.checked = true;
-    }
+        /**
+         * Calcule la couleur du score en fonction de sa valeur.
+         * @returns {string} Classes Tailwind pour la couleur.
+         */
+        get scoreColor() {
+            if (!this.result) return 'text-white';
+            const score = this.result.score;
+            if (score >= 7) return 'text-red-400';
+            if (score >= 4) return 'text-yellow-400';
+            return 'text-green-400';
+        },
 
-    toggleSwitch.addEventListener('change', (e) => {
-        if (e.target.checked) {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('theme', 'light-mode');
-        }
-    });
+        /**
+         * Génère le HTML de la réponse avec les expressions cyniques surlignées.
+         * @returns {string} HTML de la réponse formatée.
+         */
+        get highlightedResponse() {
+            if (!this.result) return '';
 
-    // --- Logique de l'appel API ---
-    const form = document.getElementById('cynic-form');
-    const resultDiv = document.getElementById('result');
-    const spinner = document.getElementById('spinner');
+            let texteSurligne = this.reponse;
 
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const contexte = document.getElementById('contexte').value;
-        const reponseAAnalyser = document.getElementById('reponse').value;
-        const proposer = document.getElementById('proposer-au-palmares').checked;
-
-        spinner.style.display = 'block';
-        resultDiv.style.display = 'none';
-        resultDiv.innerHTML = '';
-
-        try {
-            const response = await fetch('/api/analyze', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contexte: contexte,
-                    reponse: reponseAAnalyser,
-                    proposer_au_palmares: proposer
-                }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.detail || 'Erreur inconnue.');
-            }
-
-            function escapeRegExp(string) {
+            // Fonction pour échapper les caractères spéciaux pour la RegExp
+            const escapeRegExp = (string) => {
                 return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            }
+            };
 
-            let texteSurligne = reponseAAnalyser;
-
-            if (data.expressions_cyniques && data.expressions_cyniques.length > 0) {
-                data.expressions_cyniques.forEach(phrase => {
+            if (this.result.expressions_cyniques && this.result.expressions_cyniques.length > 0) {
+                this.result.expressions_cyniques.forEach(phrase => {
                     const escapedPhrase = escapeRegExp(phrase);
                     const regex = new RegExp(escapedPhrase, 'gi');
                     texteSurligne = texteSurligne.replace(regex, `<mark>$&</mark>`);
                 });
             }
+            return texteSurligne;
+        },
 
-            resultDiv.innerHTML = `
-                <h3>Résultat de l'analyse</h3>
-                <p><strong>Score de Moquerie :</strong> ${data.score} / 10</p>
-                <p><strong>Verdict du Détecteur :</strong> ${data.verdict}</p>
-                <h4>Texte analysé :</h4>
-                <div id="highlighted-text">${texteSurligne}</div>
-            `;
-        } catch (error) {
-            resultDiv.innerHTML = `<p style="color: var(--title-color);"><strong>Erreur :</strong> ${error.message}</p>`;
-        } finally {
-            spinner.style.display = 'none';
-            resultDiv.style.display = 'block';
+        // --- Actions (les fonctions) ---
+
+        /**
+         * Fonction principale appelée lors de la soumission du formulaire.
+         */
+        async analyze() {
+            // Réinitialiser l'état avant chaque appel
+            this.isLoading = true;
+            this.result = null;
+            this.error = null;
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contexte: this.contexte,
+                        reponse: this.reponse,
+                        proposer_au_palmares: this.proposerAuPalmares
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Si l'API retourne une erreur (ex: 503), la récupérer du JSON
+                    throw new Error(data.detail || 'Une erreur inconnue est survenue.');
+                }
+
+                // Mettre à jour le résultat en cas de succès
+                this.result = data;
+
+            } catch (err) {
+                // Capturer les erreurs réseau ou celles levées manuellement
+                this.error = err.message;
+            } finally {
+                // Dans tous les cas, arrêter le chargement
+                this.isLoading = false;
+                // S'assurer que les icônes sont re-rendues si elles apparaissent dynamiquement
+                this.$nextTick(() => {
+                    lucide.createIcons();
+                });
+            }
         }
-    });
+    }));
 });
