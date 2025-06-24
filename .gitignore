@@ -12,3 +12,7 @@ env/
 
 # Build artifacts
 *.egg-info
+
+# Alembic & SQL
+*.db
+alembic.ini
