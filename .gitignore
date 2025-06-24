@@ -15,4 +15,3 @@ env/
 
 # Alembic & SQL
 *.db
-alembic.ini
