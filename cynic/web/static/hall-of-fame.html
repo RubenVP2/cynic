@@ -6,41 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Palmarès du Cynisme - Cynic</title>
     <link rel="stylesheet" href="/static/style.css">
-    <style>
-        .entry {
-            margin-bottom: 2rem;
-            border-left: 3px solid var(--primary-color);
-            padding-left: 1.5rem;
-        }
-
-        .entry-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-        }
-
-        .entry-score {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--title-color);
-        }
-
-        .entry-body {
-            margin-top: 1rem;
-        }
-
-        .entry-body p {
-            margin: 0.5rem 0;
-            opacity: 0.9;
-        }
-
-        .entry-body blockquote {
-            margin-left: 0;
-            padding-left: 1rem;
-            border-left: 2px solid var(--border-color);
-            font-style: italic;
-        }
-    </style>
 </head>
 
 <body>
@@ -48,53 +13,26 @@
         <div class="card">
             <header>
                 <h1>🏆 Palmarès du Cynisme</h1>
-                <p>Le Top 10 des perles de la communication corporate. | <a href="/">Retour à l'analyse</a></p>
+                <p>Le Top 10 des perles de la communication corporate.</p>
             </header>
             <main id="hall-of-fame-list">
                 <div id="spinner" class="spinner" style="display: block;"></div>
             </main>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const listDiv = document.getElementById('hall-of-fame-list');
-            const spinner = document.getElementById('spinner');
 
-            try {
-                const response = await fetch('/api/hall-of-fame');
-                if (!response.ok) throw new Error('Impossible de charger le palmarès.');
-
-                const entries = await response.json();
-
-                if (entries.length === 0) {
-                    listDiv.innerHTML = '<p>Le palmarès est encore vide. Soyez le premier à soumettre une perle !</p>';
-                    return;
-                }
-
-                let content = '';
-                entries.forEach((entry, index) => {
-                    content += `
-                        <div class="entry">
-                            <div class="entry-header">
-                                <h2>#${index + 1}</h2>
-                                <div class="entry-score">${entry.score} / 10</div>
-                            </div>
-                            <div class="entry-body">
-                                ${entry.contexte ? `<p><strong>Contexte:</strong> <blockquote>${entry.contexte}</blockquote></p>` : ''}
-                                <p><strong>Réponse analysée:</strong> <blockquote>${entry.reponse}</blockquote></p>
-                            </div>
-                        </div>
-                    `;
-                });
-                listDiv.innerHTML = content;
-
-            } catch (error) {
-                listDiv.innerHTML = `<p style="color: red;"><strong>Erreur :</strong> ${error.message}</p>`;
-            } finally {
-                spinner.style.display = 'none';
-            }
-        });
-    </script>
+    <a href="/" class="floating-action-button" aria-label="Retour à l'analyse">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 8V4H8" />
+            <rect width="16" height="12" x="4" y="8" rx="2" />
+            <path d="M2 14h2" />
+            <path d="M20 14h2" />
+            <path d="M15 13v2" />
+            <path d="M9 13v2" />
+        </svg>
+    </a>
+    <script src="/static/hall-of-fame.js"></script>
 </body>
 
 </html>

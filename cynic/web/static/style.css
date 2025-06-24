@@ -1,4 +1,6 @@
-/* --- CSS Variables for Theming (Dark/Light Mode) --- */
+/* cynic/web/static/style.css */
+
+/* --- Variables pour les thèmes (Dark/Light Mode) --- */
 :root {
     --bg-color: #f0f2f5;
     --text-color: #1c1e21;
@@ -7,6 +9,7 @@
     --primary-color: #457b9d;
     --primary-hover: #1d3557;
     --title-color: #e63946;
+    --link-color: #1d3557;
     --bg-gradient-start: #a8dadc;
     --bg-gradient-end: #457b9d;
 }
@@ -19,11 +22,12 @@ body.dark-mode {
     --primary-color: #457b9d;
     --primary-hover: #a8dadc;
     --title-color: #e63946;
+    --link-color: #a8dadc;
     --bg-gradient-start: #1d3557;
     --bg-gradient-end: #121212;
 }
 
-/* --- Background Animation --- */
+/* --- Animation de fond --- */
 @keyframes gradient-animation {
     0% {
         background-position: 0% 50%;
@@ -48,7 +52,7 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* --- Main Layout --- */
+/* --- Layout Principal --- */
 .container {
     display: flex;
     flex-direction: column;
@@ -85,6 +89,16 @@ header p {
     opacity: 0.8;
 }
 
+header a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -99,6 +113,7 @@ textarea {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    resize: vertical;
 }
 
 textarea:focus {
@@ -121,6 +136,7 @@ button:hover {
     background-color: var(--primary-hover);
 }
 
+/* --- Éléments de Résultat --- */
 #result {
     margin-top: 2rem;
     padding: 1.5rem;
@@ -144,6 +160,26 @@ button:hover {
     to {
         transform: rotate(360deg);
     }
+}
+
+mark {
+    background-color: rgba(230, 57, 70, 0.4);
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+body.dark-mode mark {
+    background-color: rgba(230, 57, 70, 0.6);
+}
+
+#highlighted-text {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 /* --- Dark Mode Toggle --- */
@@ -197,23 +233,67 @@ input:checked+.slider:before {
     transform: translateX(24px);
 }
 
-mark {
-    background-color: rgba(230, 57, 70, 0.4);
-    /* Rouge Cynic, semi-transparent */
-    border-radius: 4px;
-    padding: 2px 4px;
+/* --- Style pour la page Hall of Fame --- */
+.entry {
+    margin-bottom: 2rem;
+    border-left: 3px solid var(--primary-color);
+    padding-left: 1.5rem;
 }
 
-body.dark-mode mark {
-    background-color: rgba(230, 57, 70, 0.6);
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
 }
 
-#highlighted-text {
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    padding: 1rem;
-    border-radius: 8px;
+.entry-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--title-color);
+}
+
+.entry-body {
     margin-top: 1rem;
-    white-space: pre-wrap;
-    /* Conserve les sauts de ligne */
+}
+
+.entry-body p {
+    margin: 0.5rem 0;
+    opacity: 0.9;
+}
+
+.entry-body blockquote {
+    margin-left: 0;
+    padding-left: 1rem;
+    border-left: 2px solid var(--border-color);
+    font-style: italic;
+    word-wrap: break-word;
+}
+
+/* --- Style pour le Bouton d'Action Flottant (FAB) --- */
+.floating-action-button {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out, background-color 0.2s;
+    z-index: 1000;
+}
+
+.floating-action-button:hover {
+    transform: scale(1.1);
+    background-color: var(--primary-hover);
+}
+
+.floating-action-button svg {
+    width: 32px;
+    height: 32px;
+    stroke: white;
+    stroke-width: 2;
 }
